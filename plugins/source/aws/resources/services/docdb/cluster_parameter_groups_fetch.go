@@ -3,6 +3,7 @@ package docdb
 import (
 	"context"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/docdb"
 	"github.com/aws/aws-sdk-go-v2/service/docdb/types"
 	"github.com/cloudquery/cloudquery/plugins/source/aws/client"
@@ -13,7 +14,9 @@ func fetchDocdbClusterParameterGroups(ctx context.Context, meta schema.ClientMet
 	c := meta.(*client.Client)
 	svc := c.Services().Docdb
 
-	input := &docdb.DescribeDBClusterParameterGroupsInput{}
+	input := &docdb.DescribeDBClusterParameterGroupsInput{
+		Filters: []types.Filter{{Name: aws.String("engine"), Values: []string{"docdb"}}},
+	}
 
 	p := docdb.NewDescribeDBClusterParameterGroupsPaginator(svc, input)
 	for p.HasMorePages() {
@@ -31,6 +34,7 @@ func resolveDocdbClusterParameterGroupParameters(ctx context.Context, meta schem
 	svc := meta.(*client.Client).Services().Docdb
 
 	input := &docdb.DescribeDBClusterParametersInput{
+		Filters:                     []types.Filter{{Name: aws.String("engine"), Values: []string{"docdb"}}},
 		DBClusterParameterGroupName: item.DBClusterParameterGroupName,
 	}
 

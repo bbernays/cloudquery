@@ -3,6 +3,7 @@ package docdb
 import (
 	"context"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/docdb"
 	"github.com/cloudquery/cloudquery/plugins/source/aws/client"
 	"github.com/cloudquery/plugin-sdk/schema"
@@ -12,7 +13,9 @@ func fetchDocdbEngineVersions(ctx context.Context, meta schema.ClientMeta, _ *sc
 	c := meta.(*client.Client)
 	svc := c.Services().Docdb
 
-	input := &docdb.DescribeDBEngineVersionsInput{}
+	input := &docdb.DescribeDBEngineVersionsInput{
+		Engine: aws.String("docdb"),
+	}
 
 	p := docdb.NewDescribeDBEngineVersionsPaginator(svc, input)
 	for p.HasMorePages() {

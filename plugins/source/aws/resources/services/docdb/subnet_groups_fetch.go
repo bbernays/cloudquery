@@ -3,6 +3,7 @@ package docdb
 import (
 	"context"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/docdb"
 	"github.com/aws/aws-sdk-go-v2/service/docdb/types"
 	"github.com/cloudquery/cloudquery/plugins/source/aws/client"
@@ -13,7 +14,9 @@ func fetchDocdbSubnetGroups(ctx context.Context, meta schema.ClientMeta, _ *sche
 	c := meta.(*client.Client)
 	svc := c.Services().Docdb
 
-	input := &docdb.DescribeDBSubnetGroupsInput{}
+	input := &docdb.DescribeDBSubnetGroupsInput{
+		Filters: []types.Filter{{Name: aws.String("engine"), Values: []string{"docdb"}}},
+	}
 
 	p := docdb.NewDescribeDBSubnetGroupsPaginator(svc, input)
 	for p.HasMorePages() {
