@@ -17,6 +17,7 @@ func init() {
 			ListFunction:        (&pb.UnimplementedServicesServer{}).ListServices,
 			UnimplementedServer: &pb.UnimplementedServicesServer{},
 			Description:         "https://cloud.google.com/run/docs/reference/rest/v2/projects.locations.services#Service",
+			SkipFetch:           true,
 		},
 	}
 
