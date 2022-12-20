@@ -20,19 +20,39 @@ func Services() *schema.Table {
 				Resolver: client.ResolveProject,
 			},
 			{
-				Name:     "name",
-				Type:     schema.TypeString,
-				Resolver: schema.PathResolver("Name"),
+				Name:     "annotations",
+				Type:     schema.TypeJSON,
+				Resolver: schema.PathResolver("Annotations"),
 			},
 			{
-				Name:     "description",
+				Name:     "cluster_name",
 				Type:     schema.TypeString,
-				Resolver: schema.PathResolver("Description"),
+				Resolver: schema.PathResolver("ClusterName"),
 			},
 			{
-				Name:     "uid",
+				Name:     "creation_timestamp",
 				Type:     schema.TypeString,
-				Resolver: schema.PathResolver("Uid"),
+				Resolver: schema.PathResolver("CreationTimestamp"),
+			},
+			{
+				Name:     "deletion_grace_period_seconds",
+				Type:     schema.TypeInt,
+				Resolver: schema.PathResolver("DeletionGracePeriodSeconds"),
+			},
+			{
+				Name:     "deletion_timestamp",
+				Type:     schema.TypeString,
+				Resolver: schema.PathResolver("DeletionTimestamp"),
+			},
+			{
+				Name:     "finalizers",
+				Type:     schema.TypeStringArray,
+				Resolver: schema.PathResolver("Finalizers"),
+			},
+			{
+				Name:     "generate_name",
+				Type:     schema.TypeString,
+				Resolver: schema.PathResolver("GenerateName"),
 			},
 			{
 				Name:     "generation",
@@ -45,64 +65,34 @@ func Services() *schema.Table {
 				Resolver: schema.PathResolver("Labels"),
 			},
 			{
-				Name:     "annotations",
+				Name:     "name",
+				Type:     schema.TypeString,
+				Resolver: schema.PathResolver("Name"),
+			},
+			{
+				Name:     "namespace",
+				Type:     schema.TypeString,
+				Resolver: schema.PathResolver("Namespace"),
+			},
+			{
+				Name:     "owner_references",
 				Type:     schema.TypeJSON,
-				Resolver: schema.PathResolver("Annotations"),
+				Resolver: schema.PathResolver("OwnerReferences"),
 			},
 			{
-				Name:     "create_time",
-				Type:     schema.TypeTimestamp,
-				Resolver: client.ResolveProtoTimestamp("CreateTime"),
-			},
-			{
-				Name:     "update_time",
-				Type:     schema.TypeTimestamp,
-				Resolver: client.ResolveProtoTimestamp("UpdateTime"),
-			},
-			{
-				Name:     "delete_time",
-				Type:     schema.TypeTimestamp,
-				Resolver: client.ResolveProtoTimestamp("DeleteTime"),
-			},
-			{
-				Name:     "expire_time",
-				Type:     schema.TypeTimestamp,
-				Resolver: client.ResolveProtoTimestamp("ExpireTime"),
-			},
-			{
-				Name:     "creator",
+				Name:     "resource_version",
 				Type:     schema.TypeString,
-				Resolver: schema.PathResolver("Creator"),
+				Resolver: schema.PathResolver("ResourceVersion"),
 			},
 			{
-				Name:     "last_modifier",
+				Name:     "self_link",
 				Type:     schema.TypeString,
-				Resolver: schema.PathResolver("LastModifier"),
+				Resolver: schema.PathResolver("SelfLink"),
 			},
 			{
-				Name:     "client",
+				Name:     "uid",
 				Type:     schema.TypeString,
-				Resolver: schema.PathResolver("Client"),
-			},
-			{
-				Name:     "client_version",
-				Type:     schema.TypeString,
-				Resolver: schema.PathResolver("ClientVersion"),
-			},
-			{
-				Name:     "ingress",
-				Type:     schema.TypeString,
-				Resolver: client.ResolveProtoEnum("Ingress"),
-			},
-			{
-				Name:     "launch_stage",
-				Type:     schema.TypeString,
-				Resolver: client.ResolveProtoEnum("LaunchStage"),
-			},
-			{
-				Name:     "binary_authorization",
-				Type:     schema.TypeJSON,
-				Resolver: schema.PathResolver("BinaryAuthorization"),
+				Resolver: schema.PathResolver("Uid"),
 			},
 			{
 				Name:     "template",
@@ -113,51 +103,6 @@ func Services() *schema.Table {
 				Name:     "traffic",
 				Type:     schema.TypeJSON,
 				Resolver: schema.PathResolver("Traffic"),
-			},
-			{
-				Name:     "observed_generation",
-				Type:     schema.TypeInt,
-				Resolver: schema.PathResolver("ObservedGeneration"),
-			},
-			{
-				Name:     "terminal_condition",
-				Type:     schema.TypeJSON,
-				Resolver: schema.PathResolver("TerminalCondition"),
-			},
-			{
-				Name:     "conditions",
-				Type:     schema.TypeJSON,
-				Resolver: schema.PathResolver("Conditions"),
-			},
-			{
-				Name:     "latest_ready_revision",
-				Type:     schema.TypeString,
-				Resolver: schema.PathResolver("LatestReadyRevision"),
-			},
-			{
-				Name:     "latest_created_revision",
-				Type:     schema.TypeString,
-				Resolver: schema.PathResolver("LatestCreatedRevision"),
-			},
-			{
-				Name:     "traffic_statuses",
-				Type:     schema.TypeJSON,
-				Resolver: schema.PathResolver("TrafficStatuses"),
-			},
-			{
-				Name:     "uri",
-				Type:     schema.TypeString,
-				Resolver: schema.PathResolver("Uri"),
-			},
-			{
-				Name:     "reconciling",
-				Type:     schema.TypeBool,
-				Resolver: schema.PathResolver("Reconciling"),
-			},
-			{
-				Name:     "etag",
-				Type:     schema.TypeString,
-				Resolver: schema.PathResolver("Etag"),
 			},
 		},
 	}
