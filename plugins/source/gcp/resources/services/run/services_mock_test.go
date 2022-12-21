@@ -1,55 +1,36 @@
 package run
 
 import (
-	"encoding/json"
-	"net/http"
+	"context"
+	"fmt"
 	"testing"
 
 	"github.com/cloudquery/plugin-sdk/faker"
 	"github.com/cloudquery/plugins/source/gcp/client"
-	"github.com/julienschmidt/httprouter"
-	"google.golang.org/api/run/v1"
+	"google.golang.org/grpc"
+
+	pb "cloud.google.com/go/run/apiv2/runpb"
 )
 
-func createRunServices(mux *httprouter.Router) error {
-	var spec *run.ServiceSpec
-
-	if err := faker.FakeObject(&spec); err != nil {
-		return err
-	}
-	var status *run.ServiceStatus
-
-	if err := faker.FakeObject(&status); err != nil {
-		return err
-	}
-
-	var meta *run.ObjectMeta
-
-	if err := faker.FakeObject(&meta); err != nil {
-		return err
-	}
-	mux.GET("/v1/projects/testProject/locations/-/services", func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-		resp := run.ListServicesResponse{
-			Items: []*run.Service{{
-				Spec:     spec,
-				Status:   status,
-				Metadata: meta,
-			},
-			},
-		}
-		b, err := json.Marshal(resp)
-		if err != nil {
-			http.Error(w, "unable to marshal request: "+err.Error(), http.StatusBadRequest)
-			return
-		}
-		if _, err := w.Write(b); err != nil {
-			http.Error(w, "failed to write", http.StatusBadRequest)
-			return
-		}
-	})
+func createServices(gsrv *grpc.Server) error {
+	fakeServer := &fakeServicesServer{}
+	pb.RegisterServicesServer(gsrv, fakeServer)
 	return nil
 }
 
+type fakeServicesServer struct {
+	pb.UnimplementedServicesServer
+}
+
+func (f *fakeServicesServer) ListServices(context.Context, *pb.ListServicesRequest) (*pb.ListServicesResponse, error) {
+	resp := pb.ListServicesResponse{}
+	if err := faker.FakeObject(&resp); err != nil {
+		return nil, fmt.Errorf("failed to fake data: %w", err)
+	}
+	resp.NextPageToken = ""
+	return &resp, nil
+}
+
 func TestServices(t *testing.T) {
-	client.MockTestRestHelper(t, Services(), createRunServices, client.TestOptions{})
+	client.MockTestGrpcHelper(t, Services(), createServices, client.TestOptions{})
 }
