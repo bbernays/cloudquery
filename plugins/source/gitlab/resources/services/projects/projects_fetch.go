@@ -11,18 +11,44 @@ import (
 func fetchProjects(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- any) error {
 	c := meta.(*client.Client)
 
-	opt := &gitlab.ListProjectsOptions{
+	optGroups := &gitlab.ListGroupsOptions{
 		ListOptions: gitlab.ListOptions{
 			PerPage: 1000,
 		},
 	}
+	opt := &gitlab.ListGroupProjectsOptions{
+		ListOptions: gitlab.ListOptions{
+			PerPage: 1000,
+		},
+	}
+
 	for {
 		// Get the first page with projects.
-		projects, resp, err := c.Gitlab.Projects.ListProjects(opt, gitlab.WithContext(ctx))
+		groups, resp, err := c.Gitlab.Groups.ListGroups(optGroups, gitlab.WithContext(ctx))
 		if err != nil {
 			return err
 		}
-		res <- projects
+		if len(groups) == 0 {
+			return nil
+		}
+		for _, group := range groups {
+			for {
+				// Get the first page with projects.
+				projects, resp, err := c.Gitlab.Groups.ListGroupProjects(group.ID, opt, gitlab.WithContext(ctx))
+				if err != nil {
+					return err
+				}
+				res <- projects
+
+				// Exit the loop when we've seen all pages.
+				if resp.NextPage == 0 {
+					break
+				}
+
+				// Update the page number to get the next page.
+				opt.Page = resp.NextPage
+			}
+		}
 
 		// Exit the loop when we've seen all pages.
 		if resp.NextPage == 0 {
