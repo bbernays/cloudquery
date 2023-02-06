@@ -208,6 +208,7 @@ func tables() []*schema.Table {
 		ecr.Registries(),
 		ecr.RegistryPolicies(),
 		ecr.Repositories(),
+		ecs.AccountSettings(),
 		ecs.Clusters(),
 		ecs.TaskDefinitions(),
 		efs.Filesystems(),
