@@ -385,6 +385,7 @@ func Configure(ctx context.Context, logger zerolog.Logger, spec specs.Source, op
 		if err != nil {
 			if account.source == "org" {
 				logger.Warn().Msg("Unable to assume role in account")
+				logger.Warn().Str("account", account.ID).Err(err).Msg("This account will be skipped. Ensure that target role exists and that the source role has permissions to assume it.")
 				continue
 			}
 			var ae smithy.APIError
