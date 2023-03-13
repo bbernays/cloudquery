@@ -20,7 +20,7 @@ func Services() *schema.Table {
 		PreResourceResolver: getPricingFile,
 		Transform: transformers.TransformWithStruct(&PricingFile{},
 			transformers.WithSkipFields("Products", "Terms"),
-			transformers.WithPrimaryKeys("OfferCode", "Version", "PublicationDate"),
+			transformers.WithPrimaryKeys("OfferCode", "Version", "PublicationDate", "RegionCode"),
 		),
 		Relations: []*schema.Table{
 			products(),
@@ -50,7 +50,7 @@ func validateOffersToSync(c *client.Client, offerCode string) bool {
 	return false
 }
 
-func getPricingFileLinks(c *client.Client) ([]string, error) {
+func getPricingFileLinks(c *client.Client) ([]pricingLinks, error) {
 	resp, err := http.Get(ROOT_URL + "/offers/v1.0/aws/index.json")
 	if err != nil {
 		return nil, err
@@ -62,7 +62,7 @@ func getPricingFileLinks(c *client.Client) ([]string, error) {
 	if err := json.NewDecoder(resp.Body).Decode(&offersFile); err != nil {
 		return nil, err
 	}
-	links := make([]string, 0)
+	links := make([]pricingLinks, 0)
 	for _, offer := range offersFile["offers"].(map[string]any) {
 		offer := offer.(map[string]any)
 		if !validateOffersToSync(c, offer["offerCode"].(string)) {
@@ -90,7 +90,7 @@ func validateRegionsToSync(c *client.Client, regionCode string) bool {
 	return false
 }
 
-func getRegionalPricingFileLinks(c *client.Client, link string) ([]string, error) {
+func getRegionalPricingFileLinks(c *client.Client, link string) ([]pricingLinks, error) {
 	resp, err := http.Get(link)
 	if err != nil {
 		return nil, err
@@ -102,21 +102,24 @@ func getRegionalPricingFileLinks(c *client.Client, link string) ([]string, error
 	if err := json.NewDecoder(resp.Body).Decode(&offerFiles); err != nil {
 		return nil, err
 	}
-	links := make([]string, 0)
+	links := make([]pricingLinks, 0)
 	regions := offerFiles["regions"].(map[string]any)
 	for _, region := range regions {
 		region := region.(map[string]any)
 		if !validateRegionsToSync(c, region["regionCode"].(string)) {
 			continue
 		}
-		links = append(links, ROOT_URL+region["currentVersionUrl"].(string))
+		links = append(links, pricingLinks{
+			link:   ROOT_URL + region["currentVersionUrl"].(string),
+			region: region["regionCode"].(string),
+		})
 	}
 	return links, nil
 }
 
 func getPricingFile(ctx context.Context, meta schema.ClientMeta, resource *schema.Resource) error {
-	link := resource.Item.(string)
-	resp, err := http.Get(link)
+	link := resource.Item.(pricingLinks)
+	resp, err := http.Get(link.link)
 	if err != nil {
 		return err
 	}
@@ -127,17 +130,18 @@ func getPricingFile(ctx context.Context, meta schema.ClientMeta, resource *schem
 	if err := json.NewDecoder(resp.Body).Decode(&rawPricingFile); err != nil {
 		return err
 	}
-	pricingFile, _ := transformRawPricingFile(rawPricingFile)
+	pricingFile, _ := transformRawPricingFile(rawPricingFile, link.region)
 	resource.Item = pricingFile
 	return nil
 }
 
-func transformRawPricingFile(rawStruct map[string]any) (PricingFile, error) {
+func transformRawPricingFile(rawStruct map[string]any, region string) (PricingFile, error) {
 	var pricingFile PricingFile
 	pricingFile.FormatVersion = rawStruct["formatVersion"].(string)
 	pricingFile.Disclaimer = rawStruct["disclaimer"].(string)
 	pricingFile.OfferCode = rawStruct["offerCode"].(string)
 	pricingFile.Version = rawStruct["version"].(string)
+	pricingFile.RegionCode = region
 
 	pubDate, err := time.Parse(time.RFC3339, rawStruct["publicationDate"].(string))
 	if err != nil {
@@ -145,10 +149,10 @@ func transformRawPricingFile(rawStruct map[string]any) (PricingFile, error) {
 	}
 	pricingFile.PublicationDate = pubDate
 
-	pricingFile.Products = extractProducts(rawStruct["products"].(map[string]any))
+	pricingFile.Products = extractProducts(rawStruct["products"].(map[string]any), region)
 
 	rawTerms := rawStruct["terms"].(map[string]any)
-	terms, err := extractAllTerms(rawTerms)
+	terms, err := extractAllTerms(rawTerms, pricingFile.RegionCode)
 	if err != nil {
 		return PricingFile{}, err
 	}
@@ -157,7 +161,7 @@ func transformRawPricingFile(rawStruct map[string]any) (PricingFile, error) {
 	return pricingFile, nil
 }
 
-func extractProducts(rawProducts map[string]any) []Product {
+func extractProducts(rawProducts map[string]any, region string) []Product {
 	products := make([]Product, len(rawProducts))
 	counter := 0
 	for _, val := range rawProducts {
@@ -169,6 +173,7 @@ func extractProducts(rawProducts map[string]any) []Product {
 		if productFamily, ok := val["productFamily"]; ok {
 			product.ProductFamily = productFamily.(string)
 		}
+		product.RegionCode = region
 		products[counter] = product
 		counter++
 	}
@@ -198,7 +203,7 @@ func countTermItems(termsRaw map[string]any) int {
 	return counter
 }
 
-func extractAllTerms(termsRaw map[string]any) ([]Term, error) {
+func extractAllTerms(termsRaw map[string]any, region string) ([]Term, error) {
 	terms := make([]Term, countTermItems(termsRaw))
 
 	counter := 0
@@ -212,6 +217,7 @@ func extractAllTerms(termsRaw map[string]any) ([]Term, error) {
 				if err != nil {
 					return nil, err
 				}
+				term.RegionCode = region
 				terms[counter] = term
 				counter++
 			}
@@ -295,11 +301,13 @@ type PricingFile struct {
 	PublicationDate time.Time `json:"publicationDate"`
 	Products        []Product `json:"products"`
 	Terms           []Term    `json:"terms"`
+	RegionCode      string
 }
 type Product struct {
 	Sku           string            `json:"sku"`
 	ProductFamily string            `json:"productFamily"`
 	Attributes    map[string]string `json:"attributes"`
+	RegionCode    string
 }
 type PricePerUnit struct {
 	Usd string `json:"USD"`
@@ -320,4 +328,10 @@ type Term struct {
 	EffectiveDate   time.Time         `json:"effectiveDate"`
 	PriceDimensions []PriceDimension  `json:"priceDimensions"`
 	TermAttributes  map[string]string `json:"termAttributes"`
+	RegionCode      string
+}
+
+type pricingLinks struct {
+	link   string
+	region string
 }

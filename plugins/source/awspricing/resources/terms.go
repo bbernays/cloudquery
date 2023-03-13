@@ -11,7 +11,7 @@ func terms() *schema.Table {
 	return &schema.Table{
 		Name:      "awspricing_service_terms",
 		Resolver:  fetchTerms,
-		Transform: transformers.TransformWithStruct(&Term{}, transformers.WithPrimaryKeys("OfferTermCode", "Sku")),
+		Transform: transformers.TransformWithStruct(&Term{}, transformers.WithPrimaryKeys("OfferTermCode", "Sku", "Type", "RegionCode")),
 	}
 }
 func fetchTerms(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- any) error {
