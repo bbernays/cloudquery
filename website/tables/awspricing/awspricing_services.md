@@ -1,6 +1,6 @@
 # Table: awspricing_services
 
-The composite primary key for this table is (**offer_code**, **version**, **publication_date**).
+The composite primary key for this table is (**offer_code**, **version**, **publication_date**, **region_code**).
 
 ## Relations
 
@@ -21,3 +21,4 @@ The following tables depend on awspricing_services:
 |offer_code (PK)|String|
 |version (PK)|String|
 |publication_date (PK)|Timestamp|
+|region_code (PK)|String|

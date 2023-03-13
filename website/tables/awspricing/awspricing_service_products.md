@@ -1,6 +1,6 @@
 # Table: awspricing_service_products
 
-The primary key for this table is **sku**.
+The composite primary key for this table is (**sku**, **region_code**).
 
 ## Relations
 
@@ -17,3 +17,4 @@ This table depends on [awspricing_services](awspricing_services).
 |sku (PK)|String|
 |product_family|String|
 |attributes|JSON|
+|region_code (PK)|String|

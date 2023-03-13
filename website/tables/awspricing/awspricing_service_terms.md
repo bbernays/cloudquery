@@ -1,6 +1,6 @@
 # Table: awspricing_service_terms
 
-The composite primary key for this table is (**offer_term_code**, **sku**).
+The composite primary key for this table is (**type**, **offer_term_code**, **sku**, **region_code**).
 
 ## Relations
 
@@ -14,9 +14,10 @@ This table depends on [awspricing_services](awspricing_services).
 |_cq_sync_time|Timestamp|
 |_cq_id|UUID|
 |_cq_parent_id|UUID|
-|type|String|
+|type (PK)|String|
 |offer_term_code (PK)|String|
 |sku (PK)|String|
 |effective_date|Timestamp|
 |price_dimensions|JSON|
 |term_attributes|JSON|
+|region_code (PK)|String|
