@@ -64,46 +64,6 @@ func fetchDirectconnectGateways(ctx context.Context, meta schema.ClientMeta, par
 	return nil
 }
 
-func fetchDirectconnectGatewayAssociations(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- any) error {
-	gateway := parent.Item.(types.DirectConnectGateway)
-	c := meta.(*client.Client)
-	svc := c.Services().Directconnect
-	config := directconnect.DescribeDirectConnectGatewayAssociationsInput{DirectConnectGatewayId: gateway.DirectConnectGatewayId}
-	// No paginator available
-	for {
-		output, err := svc.DescribeDirectConnectGatewayAssociations(ctx, &config)
-		if err != nil {
-			return err
-		}
-		res <- output.DirectConnectGatewayAssociations
-		if aws.ToString(output.NextToken) == "" {
-			break
-		}
-		config.NextToken = output.NextToken
-	}
-	return nil
-}
-
-func fetchDirectconnectGatewayAttachments(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- any) error {
-	gateway := parent.Item.(types.DirectConnectGateway)
-	c := meta.(*client.Client)
-	svc := c.Services().Directconnect
-	config := directconnect.DescribeDirectConnectGatewayAttachmentsInput{DirectConnectGatewayId: gateway.DirectConnectGatewayId}
-	// No paginator available
-	for {
-		output, err := svc.DescribeDirectConnectGatewayAttachments(ctx, &config)
-		if err != nil {
-			return err
-		}
-		res <- output.DirectConnectGatewayAttachments
-		if aws.ToString(output.NextToken) == "" {
-			break
-		}
-		config.NextToken = output.NextToken
-	}
-	return nil
-}
-
 func resolveGatewayARN(_ context.Context, meta schema.ClientMeta, resource *schema.Resource, c schema.Column) error {
 	cl := meta.(*client.Client)
 	gw := resource.Item.(types.DirectConnectGateway)
