@@ -5,5 +5,5 @@ The AWS Pricing Source plugin extracts pricing information for AWS services.
 
 ## Links
 
-- [User Guide](https://cloudquery.io/docs/plugins/sources/awspricing/overview)
+- [User Guide](https://cloudquery.io/docs/plugins/sources/openapi/overview)
 

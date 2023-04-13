@@ -1,7 +1,7 @@
-# Source Plugin: awspricing
+# Source Plugin: openapi
 
 ## Tables
 
-- [awspricing_services](../../../../../website/tables/awspricing/awspricing_services.md)
-  - [awspricing_service_products](../../../../../website/tables/awspricing/awspricing_service_products.md)
-  - [awspricing_service_terms](../../../../../website/tables/awspricing/awspricing_service_terms.md)
+- [openapi_services](../../../../../website/tables/openapi/openapi_services.md)
+  - [openapi_service_products](../../../../../website/tables/openapi/openapi_service_products.md)
+  - [openapi_service_terms](../../../../../website/tables/openapi/openapi_service_terms.md)

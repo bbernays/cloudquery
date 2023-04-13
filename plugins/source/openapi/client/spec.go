@@ -1,15 +1,19 @@
 package client
 
+import "fmt"
+
 type Spec struct {
-	RegionCodes []string `json:"region_codes,omitempty"`
-	OfferCodes  []string `json:"offer_codes,omitempty"`
+	OpenAPIURL      string `json:"open_api_url"`
+	OpenApiLocation string `json:"open_api_location"`
 }
 
-func (s *Spec) SetDefaults() {
-	if len(s.RegionCodes) == 0 {
-		s.RegionCodes = []string{"*"}
+func (*Spec) SetDefaults() {
+}
+
+func (s *Spec) Validate() error {
+	if s.OpenAPIURL != "" && s.OpenApiLocation != "" {
+		return fmt.Errorf("only one of open_api_url or open_api_location can be set")
 	}
-	if len(s.OfferCodes) == 0 {
-		s.OfferCodes = []string{"*"}
-	}
+
+	return nil
 }

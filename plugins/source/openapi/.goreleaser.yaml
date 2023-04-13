@@ -1,12 +1,12 @@
 variables:
-  component: source/awspricing
-  binary: awspricing
+  component: source/openapi
+  binary: openapi
 
-project_name: plugins/source/awspricing
+project_name: plugins/source/openapi
 
 monorepo:
-  tag_prefix: plugins-source-awspricing-
-  dir: plugins/source/awspricing
+  tag_prefix: plugins-source-openapi-
+  dir: plugins/source/openapi
 
 includes:
   - from_file:
