@@ -38,8 +38,14 @@ func Configure(ctx context.Context, logger zerolog.Logger, spec specs.Source, _ 
 		return nil, err
 	}
 	c.pluginSpec = pluginSpec
+	// get the full OpenAPI spec
 
-	c.Tables, err = c.listTables(ctx)
+	err = c.generateClient(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get OpenAPI spec: %w", err)
+	}
+
+	c.Tables, err = c.generateTables(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed to list tables: %w", err)
 	}

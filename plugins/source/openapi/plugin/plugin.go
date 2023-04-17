@@ -16,5 +16,5 @@ func Plugin() *source.Plugin {
 		Version,
 		schema.Tables{},
 		client.Configure,
-	)
+		source.WithDynamicTableOption(getDynamicTables))
 }
