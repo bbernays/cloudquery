@@ -17,7 +17,11 @@ func stackTemplates() *schema.Table {
 		Description: `https://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_GetTemplate.html`,
 		Resolver:    fetchCloudformationStackTemplates,
 		Multiplex:   client.ServiceAccountRegionMultiplexer(tableName, "cloudformation"),
-		Transform:   transformers.TransformWithStruct(&cloudformation.GetTemplateOutput{}, transformers.WithSkipFields("ResultMetadata")),
+		Transform: transformers.TransformWithStruct(
+			&cloudformation.GetTemplateOutput{},
+			transformers.WithSkipFields("ResultMetadata"),
+			transformers.WithNameTransformer(client.CreateReplaceTransformer(map[string]string{"ar_ns": "arns"})),
+		),
 		Columns: []schema.Column{
 			client.DefaultAccountIDColumn(false),
 			client.DefaultRegionColumn(false),
