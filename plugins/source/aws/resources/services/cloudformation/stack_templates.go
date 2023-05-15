@@ -20,7 +20,6 @@ func stackTemplates() *schema.Table {
 		Transform: transformers.TransformWithStruct(
 			&cloudformation.GetTemplateOutput{},
 			transformers.WithSkipFields("ResultMetadata"),
-			transformers.WithNameTransformer(client.CreateReplaceTransformer(map[string]string{"ar_ns": "arns"})),
 		),
 		Columns: []schema.Column{
 			client.DefaultAccountIDColumn(false),
