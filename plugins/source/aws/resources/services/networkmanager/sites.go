@@ -8,6 +8,7 @@ import (
 	"github.com/cloudquery/cloudquery/plugins/source/aws/client"
 	"github.com/cloudquery/plugin-sdk/v3/schema"
 	"github.com/cloudquery/plugin-sdk/v3/transformers"
+	sdkTypes "github.com/cloudquery/plugin-sdk/v3/types"
 )
 
 func sites() *schema.Table {
@@ -20,6 +21,11 @@ func sites() *schema.Table {
 		Columns: []schema.Column{
 			client.DefaultAccountIDColumn(false),
 			client.DefaultRegionColumn(true),
+			{
+				Name:     "tags",
+				Type:     sdkTypes.ExtensionTypes.JSON,
+				Resolver: client.ResolveTags,
+			},
 		},
 		Relations: schema.Tables{},
 	}

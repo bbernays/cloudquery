@@ -9,6 +9,7 @@ import (
 	"github.com/cloudquery/cloudquery/plugins/source/aws/client"
 	"github.com/cloudquery/plugin-sdk/v3/schema"
 	"github.com/cloudquery/plugin-sdk/v3/transformers"
+	sdkTypes "github.com/cloudquery/plugin-sdk/v3/types"
 )
 
 func links() *schema.Table {
@@ -25,6 +26,11 @@ func links() *schema.Table {
 				Name:     "arn",
 				Type:     arrow.BinaryTypes.String,
 				Resolver: schema.PathResolver("LinkArn"),
+			},
+			{
+				Name:     "tags",
+				Type:     sdkTypes.ExtensionTypes.JSON,
+				Resolver: client.ResolveTags,
 			},
 		},
 		Relations: schema.Tables{},

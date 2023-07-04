@@ -21,6 +21,7 @@ import (
 
 type TestOptions struct {
 	TableOptions tableoptions.TableOptions
+	Region       string
 }
 
 func AwsMockTestHelper(t *testing.T, table *schema.Table, builder func(*testing.T, *gomock.Controller) Services, testOpts TestOptions) {
@@ -43,7 +44,7 @@ func AwsMockTestHelper(t *testing.T, table *schema.Table, builder func(*testing.
 		awsSpec.TableOptions = &testOpts.TableOptions
 		c := NewAwsClient(l, nil, &awsSpec)
 		services := builder(t, ctrl)
-		services.Regions = []string{"us-east-1"}
+		services.Regions = []string{testOpts.Region}
 		c.ServicesManager.InitServicesForPartitionAccount("aws", "testAccount", services)
 		c.Partition = "aws"
 		return &c, nil
