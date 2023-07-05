@@ -26,7 +26,9 @@ type TestOptions struct {
 
 func AwsMockTestHelper(t *testing.T, table *schema.Table, builder func(*testing.T, *gomock.Controller) Services, testOpts TestOptions) {
 	version := "vDev"
-
+	if testOpts.Region == "" {
+		testOpts.Region = "us-east-1"
+	}
 	table.IgnoreInTests = false
 	t.Helper()
 	ctrl := gomock.NewController(t)
