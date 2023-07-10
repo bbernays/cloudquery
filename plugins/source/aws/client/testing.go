@@ -20,10 +20,10 @@ type TestOptions struct {
 }
 
 func AwsMockTestHelper(t *testing.T, table *schema.Table, builder func(*testing.T, *gomock.Controller) Services, testOpts TestOptions) {
-	version := "vDev"
 	if testOpts.Region == "" {
 		testOpts.Region = "us-east-1"
 	}
+
 	table.IgnoreInTests = false
 	t.Helper()
 	ctrl := gomock.NewController(t)
@@ -31,20 +31,19 @@ func AwsMockTestHelper(t *testing.T, table *schema.Table, builder func(*testing.
 		zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.StampMicro},
 	).Level(zerolog.DebugLevel).With().Timestamp().Logger()
 
-	newTestExecutionClient := func(ctx context.Context, logger zerolog.Logger, spec specs.Source, _ source.Options) (schema.ClientMeta, error) {
-		var awsSpec Spec
-		if err := spec.UnmarshalSpec(&awsSpec); err != nil {
-			return nil, fmt.Errorf("failed to unmarshal aws spec: %w", err)
-		}
-		awsSpec.SetDefaults()
-		awsSpec.UsePaidAPIs = true
-		awsSpec.TableOptions = &testOpts.TableOptions
-		c := NewAwsClient(l, nil, &awsSpec)
-		services := builder(t, ctrl)
-		services.Regions = []string{testOpts.Region}
-		c.ServicesManager.InitServicesForPartitionAccount("aws", "testAccount", services)
-		c.Partition = "aws"
-		return &c, nil
+	var awsSpec Spec
+	awsSpec.SetDefaults()
+	awsSpec.UsePaidAPIs = true
+	awsSpec.TableOptions = &testOpts.TableOptions
+	c := NewAwsClient(l, &awsSpec)
+	services := builder(t, ctrl)
+	services.Regions = []string{testOpts.Region}
+	c.ServicesManager.InitServicesForPartitionAccount("aws", "testAccount", services)
+	c.Partition = "aws"
+	tables := schema.Tables{table}
+
+	if err := transformers.TransformTables(tables); err != nil {
+		t.Fatal(err)
 	}
 
 	sc := scheduler.NewScheduler(scheduler.WithLogger(l))
