@@ -3,6 +3,7 @@ package networkmanager
 import (
 	"context"
 
+	"github.com/apache/arrow/go/v13/arrow"
 	"github.com/aws/aws-sdk-go-v2/service/networkmanager"
 	"github.com/aws/aws-sdk-go-v2/service/networkmanager/types"
 	"github.com/cloudquery/cloudquery/plugins/source/aws/client"
@@ -14,13 +15,25 @@ import (
 func sites() *schema.Table {
 	tableName := "aws_networkmanager_sites"
 	return &schema.Table{
-		Name:        tableName,
-		Description: `https://docs.aws.amazon.com/networkmanager/latest/APIReference/API_Site.html`,
-		Resolver:    fetchSites,
-		Transform:   transformers.TransformWithStruct(&types.Site{}, transformers.WithPrimaryKeys("GlobalNetworkId", "SiteArn")),
+		Name: tableName,
+		Description: `https://docs.aws.amazon.com/networkmanager/latest/APIReference/API_Site.html
+The  'request_region' column is added to show region of where the request was made from.`,
+		Resolver:  fetchSites,
+		Transform: transformers.TransformWithStruct(&types.Site{}, transformers.WithPrimaryKeys("GlobalNetworkId")),
 		Columns: []schema.Column{
 			client.DefaultAccountIDColumn(false),
-			client.DefaultRegionColumn(true),
+			{
+				Name:       "request_region",
+				Type:       arrow.BinaryTypes.String,
+				Resolver:   client.ResolveAWSRegion,
+				PrimaryKey: true,
+			},
+			{
+				Name:       "arn",
+				Type:       arrow.BinaryTypes.String,
+				Resolver:   schema.PathResolver("SiteArn"),
+				PrimaryKey: true,
+			},
 			{
 				Name:     "tags",
 				Type:     sdkTypes.ExtensionTypes.JSON,

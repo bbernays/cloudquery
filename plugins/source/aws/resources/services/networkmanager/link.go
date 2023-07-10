@@ -15,17 +15,23 @@ import (
 func links() *schema.Table {
 	tableName := "aws_networkmanager_links"
 	return &schema.Table{
-		Name:        tableName,
-		Description: `https://docs.aws.amazon.com/networkmanager/latest/APIReference/API_Link.html`,
-		Resolver:    fetchLinks,
-		Transform:   transformers.TransformWithStruct(&types.Link{}, transformers.WithPrimaryKeys("GlobalNetworkId")),
+		Name: tableName,
+		Description: `https://docs.aws.amazon.com/networkmanager/latest/APIReference/API_Link.html
+The  'request_region' column is added to show region of where the request was made from.`,
+		Resolver:  fetchLinks,
+		Transform: transformers.TransformWithStruct(&types.Link{}, transformers.WithPrimaryKeys("GlobalNetworkId")),
 		Columns: []schema.Column{
 			client.DefaultAccountIDColumn(false),
-			client.DefaultRegionColumn(true),
 			{
-				Name:     "arn",
-				Type:     arrow.BinaryTypes.String,
-				Resolver: schema.PathResolver("LinkArn"),
+				Name:       "request_region",
+				Type:       arrow.BinaryTypes.String,
+				Resolver:   client.ResolveAWSRegion,
+				PrimaryKey: true,
+			}, {
+				Name:       "arn",
+				Type:       arrow.BinaryTypes.String,
+				Resolver:   schema.PathResolver("LinkArn"),
+				PrimaryKey: true,
 			},
 			{
 				Name:     "tags",

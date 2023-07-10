@@ -24,14 +24,20 @@ The  'request_region' column is added to show region of where the request was ma
 		Multiplex: client.ServiceAccountRegionMultiplexer(tableName, "networkmanager"),
 		Columns: []schema.Column{
 			client.DefaultAccountIDColumn(false),
-			// Only including the region in the PK because the ARN doesn't include it as it is a global resource
-			client.DefaultRegionColumn(true),
+			// Only including the request_region in the PK because the ARN doesn't include it as it is a global resource
+			{
+				Name:       "request_region",
+				Type:       arrow.BinaryTypes.String,
+				Resolver:   client.ResolveAWSRegion,
+				PrimaryKey: true,
+			},
 			{
 				Name:       "arn",
 				Type:       arrow.BinaryTypes.String,
 				Resolver:   schema.PathResolver("GlobalNetworkArn"),
 				PrimaryKey: true,
 			},
+
 			{
 				Name:     "tags",
 				Type:     sdkTypes.ExtensionTypes.JSON,
