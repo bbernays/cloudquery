@@ -115,7 +115,7 @@ func (c *Client) MigrateTables(ctx context.Context, msgs message.WriteMigrateTab
 
 	nonAutoMigrtableTables, changes := c.nonAutoMigratableTables(normalizedTablesSafeMode, mysqlTables)
 	if len(nonAutoMigrtableTables) > 0 {
-		return fmt.Errorf("tables %s with changes %v require force migration. use 'migrate_mode: forced'", strings.Join(nonAutoMigrtableTables, ","), changes)
+		return fmt.Errorf("tables %s with changes %v require force migration. use 'migrate_mode: forced'", strings.Join(nonAutoMigrtableTables, ","), prettifySchemaChanges(nonAutoMigrtableTables, changes))
 	}
 
 	for _, table := range normalizedTables {
@@ -147,4 +147,36 @@ func (c *Client) MigrateTables(ctx context.Context, msgs message.WriteMigrateTab
 	}
 
 	return nil
+}
+
+func prettifySchemaChanges(tables []string, changes [][]schema.TableColumnChange) string {
+	output := ""
+	for i, table := range tables {
+		output += fmt.Sprintf("%s:", table)
+		for _, change := range changes[i] {
+			output += fmt.Sprintf("\n\t%s:\t%s --> %s", change.Type, ColumnStringer(change.Current), ColumnStringer(change.Previous))
+		}
+		output += "\n"
+	}
+	return output
+}
+
+func ColumnStringer(c schema.Column) string {
+	var sb strings.Builder
+	sb.WriteString(c.Name)
+	sb.WriteString(":")
+	sb.WriteString(arrowTypeToMySqlStr(c.Type))
+	if c.PrimaryKey {
+		sb.WriteString(":PK")
+	}
+	if c.NotNull {
+		sb.WriteString(":NotNull")
+	}
+	if c.Unique {
+		sb.WriteString(":Unique")
+	}
+	if c.IncrementalKey {
+		sb.WriteString(":IncrementalKey")
+	}
+	return sb.String()
 }
