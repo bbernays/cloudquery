@@ -10,7 +10,7 @@ var (
 
 func Plugin() *plugin.Plugin {
 	return plugin.NewPlugin(
-		"azuredevops",
+		"awspricing",
 		Version,
 		Configure,
 	)
