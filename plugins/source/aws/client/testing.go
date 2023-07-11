@@ -19,12 +19,12 @@ type TestOptions struct {
 	Region       string
 }
 
-func AwsMockTestHelper(t *testing.T, table *schema.Table, builder func(*testing.T, *gomock.Controller) Services, testOpts TestOptions) {
+func AwsMockTestHelper(t *testing.T, parentTable *schema.Table, builder func(*testing.T, *gomock.Controller) Services, testOpts TestOptions) {
+	parentTable.IgnoreInTests = false
 	if testOpts.Region == "" {
 		testOpts.Region = "us-east-1"
 	}
 
-	table.IgnoreInTests = false
 	t.Helper()
 	ctrl := gomock.NewController(t)
 	l := zerolog.New(zerolog.NewTestWriter(t)).Output(
@@ -40,7 +40,7 @@ func AwsMockTestHelper(t *testing.T, table *schema.Table, builder func(*testing.
 	services.Regions = []string{testOpts.Region}
 	c.ServicesManager.InitServicesForPartitionAccount("aws", "testAccount", services)
 	c.Partition = "aws"
-	tables := schema.Tables{table}
+	tables := schema.Tables{parentTable}
 
 	if err := transformers.TransformTables(tables); err != nil {
 		t.Fatal(err)
@@ -51,10 +51,11 @@ func AwsMockTestHelper(t *testing.T, table *schema.Table, builder func(*testing.
 	if err != nil {
 		t.Fatal(err)
 	}
-
-	records := messages.GetInserts().GetRecordsForTable(table)
-	emptyColumns := schema.FindEmptyColumns(table, records)
-	if len(emptyColumns) > 0 {
-		t.Fatalf("empty columns: %v", emptyColumns)
+	for _, table := range tables.FlattenTables() {
+		records := messages.GetInserts().GetRecordsForTable(table)
+		emptyColumns := schema.FindEmptyColumns(table, records)
+		if len(emptyColumns) > 0 {
+			t.Fatalf("found empty column(s): %v in %s", emptyColumns, table.Name)
+		}
 	}
 }
