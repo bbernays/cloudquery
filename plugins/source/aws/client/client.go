@@ -116,6 +116,9 @@ func (c *Client) ID() string {
 }
 
 func (c *Client) Services() *Services {
+	if c.ServicesManager.ServicesByPartitionAccount(c.Partition, c.AccountID) == nil {
+		// initialize that service
+	}
 	return c.ServicesManager.ServicesByPartitionAccount(c.Partition, c.AccountID)
 }
 

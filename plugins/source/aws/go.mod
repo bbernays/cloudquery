@@ -1,5 +1,7 @@
 module github.com/cloudquery/cloudquery/plugins/source/aws
 
+replace github.com/cloudquery/plugin-sdk/v4 => /Users/benbernays/Documents/GitHub/plugin-sdk
+
 go 1.19
 
 require (
