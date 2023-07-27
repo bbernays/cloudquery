@@ -24,7 +24,7 @@ SELECT
 	pg_attribute.attname AS column_name,
 	pg_catalog.format_type(pg_attribute.atttypid, pg_attribute.atttypmod) AS data_type,
 	CASE 
-		WHEN conkey IS NOT NULL AND array_position(conkey, pg_attribute.attnum) > 0 THEN true
+		WHEN conkey IS NOT NULL AND pg_attribute.attnum = any( conkey) THEN true
 		ELSE false
 	END AS is_primary_key,
 	CASE 
@@ -40,7 +40,7 @@ FROM
 	pg_catalog.pg_namespace ON pg_namespace.oid = pg_class.relnamespace
 	LEFT JOIN
 	pg_catalog.pg_constraint ON pg_constraint.conrelid = pg_attribute.attrelid
-	AND conkey IS NOT NULL AND array_position(conkey, pg_attribute.attnum) > 0
+	AND conkey IS NOT NULL AND pg_attribute.attnum = any( conkey)
 	AND contype = 'p'
 	INNER JOIN
 	information_schema.columns ON columns.table_name = pg_class.relname AND columns.column_name = pg_attribute.attname AND columns.table_schema = pg_catalog.pg_namespace.nspname
