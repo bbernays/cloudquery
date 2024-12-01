@@ -5,11 +5,11 @@ import (
 	"os"
 	"time"
 
+	internalAuth "github.com/bbernays/cloudquery/internal/auth"
+	"github.com/bbernays/cloudquery/internal/env"
+	"github.com/bbernays/cloudquery/internal/specs/v0"
 	cqapi "github.com/cloudquery/cloudquery-api-go"
 	cqauth "github.com/cloudquery/cloudquery-api-go/auth"
-	internalAuth "github.com/bbernays/cloudquery/cli/internal/auth"
-	"github.com/bbernays/cloudquery/clinternal/env"
-	"github.com/bbernays/cloudquery/clinternal/specs/v0"
 	"github.com/google/uuid"
 	rudderstack "github.com/rudderlabs/analytics-go/v4"
 )

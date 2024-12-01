@@ -3,8 +3,8 @@ package auth
 import (
 	"strings"
 
+	"github.com/bbernays/cloudquery/internal/specs/v0"
 	cqapiauth "github.com/cloudquery/cloudquery-api-go/auth"
-	"github.com/cloudquery/cloudquery/cli/internal/specs/v0"
 	"github.com/rs/zerolog"
 )
 

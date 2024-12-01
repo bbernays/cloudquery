@@ -1,1 +1,0 @@
-# CloudQuery test Destination Plugin

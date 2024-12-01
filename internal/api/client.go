@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/bbernays/cloudquery/internal/env"
 	cloudquery_api "github.com/cloudquery/cloudquery-api-go"
-	"github.com/cloudquery/cloudquery/cli/internal/env"
 )
 
 const (

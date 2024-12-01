@@ -9,10 +9,10 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/bbernays/cloudquery/internal/api"
+	"github.com/bbernays/cloudquery/internal/auth"
+	"github.com/bbernays/cloudquery/internal/publish"
 	cqapiauth "github.com/cloudquery/cloudquery-api-go/auth"
-	"github.com/bbernays/cloudquery/cli/internal/api"
-	"github.com/bbernays/cloudquery/clinternal/auth"
-	"github.com/bbernays/cloudquery/clinternal/publish"
 	"github.com/spf13/cobra"
 )
 

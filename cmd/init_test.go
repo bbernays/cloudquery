@@ -8,8 +8,8 @@ import (
 	"runtime"
 	"testing"
 
+	"github.com/bbernays/cloudquery/internal/specs/v0"
 	cqapi "github.com/cloudquery/cloudquery-api-go"
-	"github.com/cloudquery/cloudquery/cli/internal/specs/v0"
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

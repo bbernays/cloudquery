@@ -1,7 +1,7 @@
 package tablenamechanger
 
 import (
-	"github.com/cloudquery/cloudquery/cli/internal/specs/v0"
+	"github.com/bbernays/cloudquery/internal/specs/v0"
 	"github.com/cloudquery/plugin-pb-go/pb/plugin/v3"
 	"github.com/cloudquery/plugin-sdk/v4/schema"
 )

@@ -1,1 +1,0 @@
-ALTER TABLE `table_name` ON CLUSTER `my_cluster` DROP COLUMN `my_col`

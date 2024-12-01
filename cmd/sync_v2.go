@@ -9,8 +9,8 @@ import (
 	"slices"
 	"time"
 
-	"github.com/bbernays/cloudquery/cli/internal/specs/v0"
-	"github.com/bbernays/cloudquery/clinternal/transformer"
+	"github.com/bbernays/cloudquery/internal/specs/v0"
+	"github.com/bbernays/cloudquery/internal/transformer"
 	"github.com/cloudquery/plugin-pb-go/managedplugin"
 	"github.com/cloudquery/plugin-pb-go/metrics"
 	"github.com/cloudquery/plugin-pb-go/pb/destination/v1"

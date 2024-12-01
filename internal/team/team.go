@@ -7,8 +7,8 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/bbernays/cloudquery/internal/api"
 	cloudquery_api "github.com/cloudquery/cloudquery-api-go"
-	"github.com/cloudquery/cloudquery/cli/internal/api"
 )
 
 type Team = cloudquery_api.Team

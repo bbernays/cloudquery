@@ -6,9 +6,9 @@ import (
 	"os"
 	"strings"
 
+	"github.com/bbernays/cloudquery/internal/team"
 	"github.com/cloudquery/cloudquery-api-go/auth"
 	"github.com/cloudquery/cloudquery-api-go/config"
-	"github.com/cloudquery/cloudquery/cli/internal/team"
 	"github.com/spf13/cobra"
 )
 

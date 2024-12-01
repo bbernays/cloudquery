@@ -9,11 +9,11 @@ import (
 	"path/filepath"
 	"syscall"
 
+	"github.com/bbernays/cloudquery/internal/api"
+	"github.com/bbernays/cloudquery/internal/hub"
+	"github.com/bbernays/cloudquery/internal/publish"
 	cloudquery_api "github.com/cloudquery/cloudquery-api-go"
 	"github.com/cloudquery/cloudquery-api-go/auth"
-	"github.com/bbernays/cloudquery/cli/internal/api"
-	"github.com/bbernays/cloudquery/clinternal/hub"
-	"github.com/bbernays/cloudquery/clinternal/publish"
 	"github.com/spf13/cobra"
 )
 

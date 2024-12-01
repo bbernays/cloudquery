@@ -16,9 +16,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/bbernays/cloudquery/internal/hub"
+	"github.com/bbernays/cloudquery/internal/publish/images"
 	cloudquery_api "github.com/cloudquery/cloudquery-api-go"
-	"github.com/bbernays/cloudquery/cli/internal/hub"
-	"github.com/bbernays/cloudquery/clinternal/publish/images"
 	"github.com/distribution/reference"
 	"github.com/docker/distribution"
 	"github.com/docker/distribution/manifest/manifestlist"

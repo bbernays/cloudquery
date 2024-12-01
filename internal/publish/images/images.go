@@ -15,8 +15,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/bbernays/cloudquery/internal/hub"
 	cloudquery_api "github.com/cloudquery/cloudquery-api-go"
-	"github.com/cloudquery/cloudquery/cli/internal/hub"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/parser"

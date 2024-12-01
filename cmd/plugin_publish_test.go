@@ -11,8 +11,8 @@ import (
 	gosync "sync"
 	"testing"
 
+	"github.com/bbernays/cloudquery/internal/hub"
 	cloudquery_api "github.com/cloudquery/cloudquery-api-go"
-	"github.com/cloudquery/cloudquery/cli/internal/hub"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/uuid"
 )

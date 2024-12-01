@@ -1,1 +1,0 @@
-DELETE FROM {{sanitizeID .Schema .Table}} WHERE {{.SourceNameColumn}} = @sourceName AND {{.SyncTimeColumn}} < @syncTime;

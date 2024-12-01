@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/bbernays/cloudquery/cli/internal/auth"
-	"github.com/bbernays/cloudquery/clinternal/specs/v0"
+	"github.com/bbernays/cloudquery/internal/auth"
+	"github.com/bbernays/cloudquery/internal/specs/v0"
 	"github.com/cloudquery/plugin-pb-go/managedplugin"
 	"github.com/cloudquery/plugin-pb-go/pb/plugin/v3"
 	"github.com/rs/zerolog/log"

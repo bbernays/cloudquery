@@ -7,7 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/cloudquery/cloudquery/cli/internal/auth"
+	"github.com/bbernays/cloudquery/internal/auth"
 
 	"github.com/spf13/cobra"
 )

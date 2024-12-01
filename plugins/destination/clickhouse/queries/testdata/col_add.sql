@@ -1,1 +1,0 @@
-ALTER TABLE `table_name` ADD COLUMN `my_col` Int64
