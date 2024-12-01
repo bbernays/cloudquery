@@ -10,9 +10,9 @@ import (
 
 	cloudquery_api "github.com/cloudquery/cloudquery-api-go"
 	apiAuth "github.com/cloudquery/cloudquery-api-go/auth"
-	"github.com/cloudquery/cloudquery/cli/internal/api"
-	"github.com/cloudquery/cloudquery/cli/internal/auth"
-	"github.com/cloudquery/cloudquery/cli/internal/specs/v0"
+	"github.com/bbernays/cloudquery/cli/internal/api"
+	"github.com/bbernays/cloudquery/clinternal/auth"
+	"github.com/bbernays/cloudquery/clinternal/specs/v0"
 	"github.com/cloudquery/plugin-pb-go/managedplugin"
 	"github.com/cloudquery/plugin-pb-go/pb/plugin/v3"
 	"github.com/google/uuid"

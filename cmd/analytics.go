@@ -8,8 +8,8 @@ import (
 	"path"
 	"strings"
 
-	"github.com/cloudquery/cloudquery/cli/internal/env"
-	"github.com/cloudquery/cloudquery/cli/internal/specs/v0"
+	"github.com/bbernays/cloudquery/cli/internal/env"
+	"github.com/bbernays/cloudquery/clinternal/specs/v0"
 	"github.com/cloudquery/plugin-pb-go/metrics"
 	"github.com/cloudquery/plugin-pb-go/pb/analytics/v0"
 	"google.golang.org/grpc"

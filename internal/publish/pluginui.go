@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	cloudquery_api "github.com/cloudquery/cloudquery-api-go"
-	"github.com/cloudquery/cloudquery/cli/internal/hub"
-	"github.com/cloudquery/cloudquery/cli/internal/publish/images"
+	"github.com/bbernays/cloudquery/cli/internal/hub"
+	"github.com/bbernays/cloudquery/clinternal/publish/images"
 	"golang.org/x/sync/errgroup"
 )
 

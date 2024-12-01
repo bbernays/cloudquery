@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/cloudquery/cloudquery/scaffold/cmd"
+	"github.com/bbernays/cloudquery/scaffold/cmd"
 )
 
 func main() {

@@ -12,9 +12,9 @@ import (
 
 	cqapi "github.com/cloudquery/cloudquery-api-go"
 	cqauth "github.com/cloudquery/cloudquery-api-go/auth"
-	"github.com/cloudquery/cloudquery/cli/internal/analytics"
-	"github.com/cloudquery/cloudquery/cli/internal/api"
-	"github.com/cloudquery/cloudquery/cli/internal/auth"
+	"github.com/bbernays/cloudquery/cli/internal/analytics"
+	"github.com/bbernays/cloudquery/clinternal/api"
+	"github.com/bbernays/cloudquery/clinternal/auth"
 	"github.com/fatih/color"
 	"github.com/manifoldco/promptui"
 	"github.com/samber/lo"
